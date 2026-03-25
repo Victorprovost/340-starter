@@ -1,5 +1,26 @@
+const path = require("path")
 const invModel = require("../models/inventory-model")
-const utilities = require("../../utilities/")
+
+function loadUtilities() {
+  const candidates = [
+    path.join(__dirname, "..", "..", "utilities"),
+    path.join(__dirname, "..", "utilities"),
+  ]
+
+  for (const candidate of candidates) {
+    try {
+      return require(candidate)
+    } catch (err) {
+      if (err.code !== "MODULE_NOT_FOUND") {
+        throw err
+      }
+    }
+  }
+
+  throw new Error("Unable to locate utilities module in known paths.")
+}
+
+const utilities = loadUtilities()
 
 const invCont = {}
 
