@@ -97,6 +97,154 @@ nav a{
   width:80px;
 }
 
+/* inventory display grid */
+
+#inv-display {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+#inv-display li {
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+#inv-display li:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+#inv-display img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+#inv-display a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.namePrice {
+  padding: 15px;
+}
+
+.namePrice h2 {
+  margin: 10px 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.namePrice h2 a {
+  color: #0aa;
+}
+
+.namePrice h2 a:hover {
+  text-decoration: underline;
+}
+
+.namePrice span {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #0aa;
+  margin-top: 10px;
+}
+
+.namePrice hr {
+  border: none;
+  border-top: 2px solid #0aa;
+  margin: 10px 0;
+}
+
+/* inventory detail view */
+
+.inventory-detail {
+  display: grid;
+  gap: 20px;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.inventory-detail .detail-image-wrapper {
+  width: 100%;
+}
+
+.inventory-detail .detail-image {
+  width: 100%;
+  max-height: 450px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.inventory-detail .detail-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inventory-detail .detail-info p {
+  margin: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .inventory-detail {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+/* notice message */
+
+.notice {
+  padding: 15px;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 4px;
+  color: #856404;
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* wrapper and main */
+
+#wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* headings */
+
+h1 {
+  color: #333;
+  margin: 20px 0;
+  font-size: 2rem;
+}
+
+h2 {
+  color: #333;
+}
+
 /* ---------- LARGE SCREEN ---------- */
 
 @media screen and (min-width: 768px){
@@ -111,6 +259,22 @@ nav a{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:30px;
+  }
+
+  #inv-display {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+  }
+
+}
+
+/* ---------- MEDIUM SCREEN ---------- */
+
+@media screen and (min-width: 480px) and (max-width: 767px){
+
+  #inv-display {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
   }
 
 }

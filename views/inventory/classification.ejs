@@ -1,0 +1,12 @@
+<%# Display the page title if provided, otherwise redirect to home %>
+<% if (title) { %>
+<h1><%= title %></h1>
+<% } else {
+  res.redirect('/')
+} %>
+
+<%# Display any flash messages (currently disabled) %>
+<%# messages() %>
+
+<%# Render the inventory grid/table %>
+<%- grid %>

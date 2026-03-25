@@ -1,0 +1,15 @@
+<%# Use the rendered title for the main heading %>
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <h1>Oops! Something went wrong</h1>
+<% } %>
+
+<%# Display the message (unescaped) from the render call %>
+<p><%- message %></p>
+
+<%# Add a light-hearted line to soften the error experience %>
+<p>Don't worry, the error gremlins are being gently ejected and your page should be back on track soon.</p>
+
+<%# Provide navigation option back to home %>
+<p><a href="/">Return to Home</a></p>
