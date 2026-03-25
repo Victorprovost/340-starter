@@ -12,7 +12,7 @@ const app = express()
 const static = require("./routes/static")
 const inventoryRoute = require("./routes/inventoryRoute")
 const invModel = require("./models/inventory-model")
-const utilities = require("../utilities")
+const utilities = require("./utilities")
 
 
 /* ***********************
