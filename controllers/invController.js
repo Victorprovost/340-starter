@@ -2,9 +2,14 @@ const path = require("path")
 const invModel = require("../models/inventory-model")
 
 function loadUtilities() {
+  const appRoot = require.main ? path.dirname(require.main.filename) : process.cwd()
   const candidates = [
-    path.join(__dirname, "..", "..", "utilities"),
-    path.join(__dirname, "..", "utilities"),
+    path.join(__dirname, "..", "..", "utilities"),    // 340-starter/controllers -> root/utilities
+    path.join(__dirname, "..", "utilities"),          // src/controllers -> src/utilities
+    path.join(__dirname, "utilities"),                  // controllers and utilities same folder (rare)
+    path.join(appRoot, "utilities"),                    // server root/app root
+    path.join(appRoot, "..", "utilities"),            // server in src, utilities in parent
+    path.join(appRoot, "340-starter", "utilities"),   // when app root is project src
   ]
 
   for (const candidate of candidates) {
