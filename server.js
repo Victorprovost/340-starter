@@ -8,32 +8,11 @@
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
-const path = require("path")
 const app = express()
 const static = require("./routes/static")
 const inventoryRoute = require("./routes/inventoryRoute")
 const invModel = require("./models/inventory-model")
-
-function loadUtilities() {
-  const candidates = [
-    path.join(__dirname, "utilities"),
-    path.join(__dirname, "..", "utilities"),
-  ]
-
-  for (const candidate of candidates) {
-    try {
-      return require(candidate)
-    } catch (err) {
-      if (err.code !== "MODULE_NOT_FOUND") {
-        throw err
-      }
-    }
-  }
-
-  throw new Error("Unable to locate utilities module in known paths.")
-}
-
-const utilities = loadUtilities()
+const utilities = require("../utilities")
 
 
 /* ***********************
