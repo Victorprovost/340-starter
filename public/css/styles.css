@@ -334,6 +334,16 @@ h2 {
   font-size: 1rem;
 }
 
+.password-hint {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #1f2937;
+  background-color: #eef6ff;
+  border-left: 4px solid #3b82f6;
+  padding: 10px 12px;
+  border-radius: 4px;
+}
+
 .login-form button {
   padding: 10px;
   background-color: #007BFF;

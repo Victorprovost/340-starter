@@ -1,0 +1,38 @@
+<% if (title) { %>
+  <h1><%= title %></h1>
+<% } else { %>
+  <% res.redirect('/') %>
+<% } %>
+
+<%- messages() %>
+
+<% if (typeof errors !== "undefined" && errors.length) { %>
+  <div class="flash-message">
+    <ul>
+      <% errors.forEach(function (error) { %>
+        <li><%= error.msg %></li>
+      <% }); %>
+    </ul>
+  </div>
+<% } %>
+
+<form action="/inv/add-classification" method="post" class="login-form">
+  <label for="classification_name">Classification Name</label>
+  <input
+    type="text"
+    id="classification_name"
+    name="classification_name"
+    value="<%= typeof classification_name !== 'undefined' ? classification_name : '' %>"
+    required
+    pattern="^[A-Za-z0-9]+$"
+    title="Classification names must contain only letters and numbers, with no spaces or special characters."
+    aria-describedby="classificationHelp"
+  >
+  <div id="classificationHelp" class="password-hint">
+    Enter a classification name with no spaces or special characters. Only letters and numbers are allowed.
+  </div>
+
+  <button type="submit">Create Classification</button>
+</form>
+
+<p><a href="/inv">Back to Inventory Management</a></p>
