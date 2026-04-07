@@ -2,10 +2,13 @@
 const express = require("express")
 const { body } = require("express-validator")
 const router = new express.Router() 
-const invController = require("../controllers/invController")
+const invController = require("../controllers/invController")   // ← Correct import
 
 // Route to build the inventory management view
 router.get("/", invController.buildInventoryManagement);
+
+// NEW: Route to show ALL vehicles
+router.get("/all", invController.buildAllInventory)
 
 // Route to build the add classification view
 router.get("/add-classification", invController.buildAddClassification);
@@ -69,6 +72,9 @@ router.post(
 
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);
+
+// API route to get inventory by classification (JSON)
+router.get("/api/classification/:classificationId", invController.getInventoryByClassificationJson);
 
 // Route to build specific inventory item detail view
 router.get("/detail/:invId", invController.buildItemDetail);

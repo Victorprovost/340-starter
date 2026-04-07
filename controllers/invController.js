@@ -11,6 +11,17 @@ invCont.buildByClassificationId = async function (req, res, next) {
   try {
     const classification_id = req.params.classificationId
     const data = await invModel.getInventoryByClassificationId(classification_id)
+    console.log("Sedan result:", data)
+
+    if (!data || data.length === 0) {
+      const nav = await utilities.getNav()
+      return res.render("inventory/classification", {
+        title: "No vehicles found",
+        nav,
+        grid: "<p class='notice'>Sorry, no vehicles available in this category.</p>"
+      })
+    }
+
     const grid = await utilities.buildClassificationGrid(data)
     const nav = await utilities.getNav()
 
@@ -70,10 +81,28 @@ invCont.buildItemDetail = async function (req, res, next) {
 invCont.buildInventoryManagement = async function (req, res, next) {
   try {
     const nav = await utilities.getNav()
+
+    // Build classification select list for inventory management page
+    const classificationList = await utilities.buildClassificationList()
+
     res.render("./inventory/management", {
       title: "Inventory Management",
       nav,
+      classificationList,
     })
+  } catch (error) {
+    next(error)
+  }
+}
+
+/* ***************************
+ *  API: Get inventory by classification (JSON)
+ * ************************** */
+invCont.getInventoryByClassificationJson = async function (req, res, next) {
+  try {
+    const classificationId = req.params.classificationId
+    const inventoryItems = await invModel.getInventoryByClassificationId(classificationId)
+    res.json(inventoryItems)
   } catch (error) {
     next(error)
   }
@@ -277,4 +306,32 @@ invCont.triggerError = async function (req, res, next) {
   throw new Error("This is an intentional 500-type error for demonstration purposes!")
 }
 
+/* ***************************
+ *  Build ALL inventory view 
+ * ************************** */
+invCont.buildAllInventory = async function (req, res, next) {
+  try {
+    const data = await invModel.getAllInventory()   // We'll create this next
+
+    if (!data || data.length === 0) {
+      const nav = await utilities.getNav()
+      return res.render("inventory/classification", {
+        title: "No vehicles found",
+        nav,
+        grid: "<p class='notice'>Sorry, no vehicles available.</p>"
+      })
+    }
+
+    const grid = await utilities.buildClassificationGrid(data)
+    const nav = await utilities.getNav()
+
+    res.render("./inventory/classification", {
+      title: "All Vehicles",
+      nav,
+      grid,
+    })
+  } catch (error) {
+    next(error)
+  }
+}
  module.exports = invCont

@@ -26,6 +26,31 @@
   color:#000;
 }
 
+#top-header a,
+#top-header .siteName a,
+#top-header #tools a,
+.siteName a,
+nav a {
+  text-decoration: none;
+}
+
+#top-header a,
+#top-header .siteName a,
+#top-header #tools a {
+  color: #000;
+}
+
+#top-header a:hover,
+#top-header .siteName a:hover,
+#top-header #tools a:hover,
+nav a:hover {
+  text-decoration: underline;
+}
+
+nav a {
+  color: #fff;
+}
+
 body{
   font-family: Arial, sans-serif;
   margin:0;
@@ -108,13 +133,45 @@ nav a{
   gap: 20px;
 }
 
-#inv-display li {
+#inv-display li.car-card {
   background: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
+
+#inv-display li.car-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+#inv-display img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  display: block;
+}
+
+#inv-display a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.car-card.empty {
+  text-align: center;
+  font-style: italic;
+  color: gray;
+}
+
+.notice {
+  padding: 16px;
+  background: #fff3cd;
+  border: 1px solid #ffecb5;
+  color: #856404;
+  border-radius: 8px;
+}
+
 
 #inv-display li:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -378,4 +435,10 @@ h2 {
     gap: 20px;
   }
 
+}
+
+.car-card.empty {
+    text-align: center;
+    font-style: italic;
+    color: gray;
 }

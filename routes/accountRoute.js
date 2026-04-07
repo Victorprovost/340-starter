@@ -16,12 +16,24 @@ router.get(
   utilities.handleErrors(accountController.buildLogin)
 )
 
+// Process the login request
+router.post(
+  "/login",
+  regValidate.loginRules(),
+  regValidate.checkLoginData,
+  utilities.handleErrors(accountController.accountLogin)
+)
+
 router.get(
   "/register",
   utilities.handleErrors(accountController.buildRegister)
 )
 
-router.post('/register', utilities.handleErrors(accountController.registerAccount))
+router.get(
+  "/",
+  utilities.checkLogin,
+  utilities.handleErrors(accountController.buildAccount)
+)
 
 // Process the registration data
 router.post(

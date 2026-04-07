@@ -12,34 +12,35 @@
     
     <h1><%= title %></h1>
 
-    <!-- Flash Message -->
-    <% if (typeof message !== "undefined") { %>
+    <%- messages() %>
+
+    <% if (typeof errors !== "undefined" && errors) { %>
       <div class="flash-message">
-        <%= message %>
+        <ul class="notice">
+          <% errors.array().forEach(function (error) { %>
+            <li><%= error.msg %></li>
+          <% }) %>
+        </ul>
       </div>
     <% } %>
 
-    <!-- Login Form -->
-    <form action="/account/login" method="post" class="login-form">
+    <form id="loginForm" action="/account/login" method="post" class="login-form">
       
       <label for="email">Email Address</label>
       <input 
         type="email" 
         id="email" 
-        name="email" 
+        name="account_email" 
         required
+        value="<%= typeof account_email !== 'undefined' ? account_email : '' %>"
       >
 
       <label for="password">Password</label>
-      <div class="password-hint">
-        Passwords must be at least 12 characters and contain at least 1 number, 1 capital letter and 1 special character
-      </div>
       <input 
         type="password" 
         id="password" 
-        name="password" 
+        name="account_password" 
         required
-        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{12,}$"
       >
 
       <button type="submit">Login</button>

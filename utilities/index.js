@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken")
+require("dotenv").config()
 const path = require("path")
 
 function loadInventoryModel() {
@@ -78,32 +80,39 @@ Util.buildClassificationList = async function (classification_id = null) {
 * Build the classification view HTML
 * ************************************ */
 Util.buildClassificationGrid = async function(data){
-  let grid = "" 
-  if(data.length > 0){
-    grid = '<ul id="inv-display">'
-    data.forEach(vehicle => { 
-      grid += '<li>'
-      grid +=  '<a href="../../inv/detail/'+ vehicle.inv_id 
-      + '" title="View ' + vehicle.inv_make + ' '+ vehicle.inv_model 
-      + 'details"><img src="' + vehicle.inv_thumbnail 
-      +'" alt="Image of '+ vehicle.inv_make + ' ' + vehicle.inv_model 
-      +' on CSE Motors" /></a>'
-      grid += '<div class="namePrice">'
-      grid += '<hr />'
-      grid += '<h2>'
-      grid += '<a href="../../inv/detail/' + vehicle.inv_id +'" title="View ' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + ' details">' 
-      + vehicle.inv_make + ' ' + vehicle.inv_model + '</a>'
-      grid += '</h2>'
-      grid += '<span>$' 
-      + new Intl.NumberFormat('en-US').format(vehicle.inv_price) + '</span>'
-      grid += '</div>'
-      grid += '</li>'
-    })
-    grid += '</ul>'
-  } else { 
-    grid = '<p class="notice">Sorry, no matching vehicles could be found.</p>'
+  if (!data || data.length === 0) {
+    return '<p class="notice car-card empty">No vehicles found.</p>'
   }
+
+  let grid = '<ul id="inv-display">'
+  data.forEach(vehicle => {
+    const thumbnailRaw = (vehicle.inv_thumbnail || '').trim()
+    let thumbnail = '/images/site/placeholder.png'
+
+    if (thumbnailRaw) {
+      const imagesIndex = thumbnailRaw.indexOf('/images/')
+      if (imagesIndex !== -1) {
+        thumbnail = thumbnailRaw.slice(imagesIndex)
+      } else if (thumbnailRaw.startsWith('images/')) {
+        thumbnail = '/' + thumbnailRaw
+      } else {
+        thumbnail = thumbnailRaw.startsWith('/') ? thumbnailRaw : '/' + thumbnailRaw
+      }
+    }
+
+    console.log(`Inventory thumbnail debug: inv_id=${vehicle.inv_id}, inv_make=${vehicle.inv_make}, inv_model=${vehicle.inv_model}, inv_thumbnail=${vehicle.inv_thumbnail}, resolved=${thumbnail}`)
+
+    grid += `
+      <li class="car-card">
+        <a href="/inv/detail/${vehicle.inv_id}">
+          <img src="${thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+          <h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>
+          <span>$${vehicle.inv_price}</span>
+        </a>
+      </li>
+    `
+  })
+  grid += '</ul>'
   return grid
 }
 
@@ -153,4 +162,39 @@ Util.handleErrors = function (fn) {
   }
 }
 
+/* ****************************************
+* Middleware to check token validity
+**************************************** */
+Util.checkJWTToken = (req, res, next) => {
+ if (req.cookies.jwt) {
+  jwt.verify(
+   req.cookies.jwt,
+   process.env.ACCESS_TOKEN_SECRET,
+   function (err, accountData) {
+    if (err) {
+     req.flash("Please log in")
+     res.clearCookie("jwt")
+     return res.redirect("/account/login")
+    }
+    res.locals.accountData = accountData
+    res.locals.loggedin = 1
+    next()
+   })
+ } else {
+  next()
+ }
+}
+
+/* ****************************************
+ *  Check Login
+ * ************************************ */
+ Util.checkLogin = (req, res, next) => {
+  if (res.locals.loggedin) {
+    next()
+  } else {
+    req.flash("notice", "Please log in.")
+    return res.redirect("/account/login")
+  }
+ }
+ 
 module.exports = Util
