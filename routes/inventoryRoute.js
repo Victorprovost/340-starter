@@ -2,14 +2,11 @@
 const express = require("express")
 const { body } = require("express-validator")
 const router = new express.Router() 
-const invController = require("../controllers/invController")   // ← Correct import
+const invController = require("../controllers/invController")
 const utilities = require("../utilities")
 
 // Route to build the inventory management view
 router.get("/", utilities.checkJWTToken, utilities.checkAccountType, invController.buildInventoryManagement);
-
-// NEW: Route to show ALL vehicles
-router.get("/all", invController.buildAllInventory)
 
 // Route to build the add classification view
 router.get("/add-classification", utilities.checkJWTToken, utilities.checkAccountType, invController.buildAddClassification);
@@ -81,19 +78,16 @@ router.post("/update/", utilities.checkJWTToken, utilities.checkAccountType, inv
 // Route to build inventory by classification view
 router.get("/type/:classificationId", invController.buildByClassificationId);
 
-// API route to get inventory by classification (JSON)
-router.get("/api/classification/:classificationId", invController.getInventoryByClassificationJson);
-
-// API route to get inventory by classification ID for AJAX requests
-router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON));
-
 // Route to build edit inventory view
-router.get("/edit/:invId", utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(invController.buildEditInventoryView));
+router.get("/edit/:invId", utilities.checkJWTToken, utilities.checkAccountType, utilities.handleErrors(invController.editInventoryView));
 
 // Route to build specific inventory item detail view
 router.get("/detail/:invId", invController.buildItemDetail);
 
 // Route to trigger an intentional 500 error
 router.get("/error", invController.triggerError);
+
+// Route to process new review
+router.post("/review", invController.addReview)
 
 module.exports = router;

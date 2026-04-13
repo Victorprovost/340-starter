@@ -47,6 +47,15 @@ app.use(function(req, res, next){
 })
 
 /* ***********************
+ * Global Variables for All Views (Login Status)
+ * ************************/
+app.use((req, res, next) => {
+  res.locals.loggedin = req.session.loggedin || false;
+  res.locals.accountData = req.session.accountData || null;
+  next();
+});
+
+/* ***********************
  * Global Variables for All Views
  * ************************/
 // This makes loggedin and accountData available in ALL EJS templates

@@ -84,7 +84,7 @@ Util.buildClassificationGrid = async function(data){
     return '<p class="notice car-card empty">No vehicles found.</p>'
   }
 
-  let grid = '<ul id="inv-display">'
+  let grid = '<div id="inv-display">'
   data.forEach(vehicle => {
     const thumbnailRaw = (vehicle.inv_thumbnail || '').trim()
     let thumbnail = '/images/site/placeholder.png'
@@ -102,17 +102,34 @@ Util.buildClassificationGrid = async function(data){
 
     console.log(`Inventory thumbnail debug: inv_id=${vehicle.inv_id}, inv_make=${vehicle.inv_make}, inv_model=${vehicle.inv_model}, inv_thumbnail=${vehicle.inv_thumbnail}, resolved=${thumbnail}`)
 
+    // Inside the loop that builds each vehicle card
+    let ratingHTML = '';
+
+    if (vehicle.average_rating) {
+      ratingHTML = `
+        <div class="vehicle-rating">
+          <span class="stars">
+            ${Array(5).fill(0).map((_, i) => 
+              `<span class="${i < Math.round(vehicle.average_rating) ? 'star filled' : 'star'}">★</span>`
+            ).join('')}
+          </span>
+          <small>${vehicle.average_rating} (${vehicle.review_count})</small>
+        </div>
+      `;
+    }
+
     grid += `
-      <li class="car-card">
-        <a href="/inv/detail/${vehicle.inv_id}">
-          <img src="${thumbnail}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
-          <h2>${vehicle.inv_make} ${vehicle.inv_model}</h2>
-          <span>$${vehicle.inv_price}</span>
-        </a>
-      </li>
+      <div class="vehicle-card">
+        <img src="${thumbnail}" alt="${vehicle.inv_make} ${vehicle.inv_model}">
+        <h3>${vehicle.inv_make} ${vehicle.inv_model}</h3>
+        <p>${vehicle.inv_description ? vehicle.inv_description.substring(0, 80) + '...' : 'No description available.'}</p>
+        <p class="price">$${parseFloat(vehicle.inv_price).toLocaleString()}</p>
+        ${ratingHTML}
+        <a href="/inv/detail/${vehicle.inv_id}" class="view-details">View Details</a>
+      </div>
     `
   })
-  grid += '</ul>'
+  grid += '</div>'
   return grid
 }
 

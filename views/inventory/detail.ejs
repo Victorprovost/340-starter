@@ -1,3 +1,88 @@
-<h1><%= title %></h1>
+<%- include('../partials/header') %>
 
-<%- vehicleDetail %>
+<div class="detail-container">
+  <h1><%= title %></h1>
+
+  <!-- Vehicle Main Info -->
+  <%- vehicleDetail %>
+
+  <!-- Average Rating -->
+  <% if (averageRating && averageRating.average_rating > 0) { %>
+    <div class="average-rating">
+      <h3>
+        Average Customer Rating: 
+        <span class="stars">
+          <% for(let i = 1; i <= 5; i++) { %>
+            <span class="<%= i <= Math.round(averageRating.average_rating) ? 'star filled' : 'star' %>">★</span>
+          <% } %>
+        </span>
+        <strong><%= averageRating.average_rating %> / 5</strong> 
+        (<%= averageRating.review_count %> reviews)
+      </h3>
+    </div>
+  <% } %>
+
+  <hr>
+
+  <!-- Customer Reviews -->
+  <h2>Customer Reviews</h2>
+
+  <% if (reviews && reviews.length > 0) { %>
+    <div class="reviews-list">
+      <% reviews.forEach(review => { %>
+        <div class="review-card">
+          <div class="review-header">
+            <strong><%= review.account_firstname %> <%= review.account_lastname %></strong>
+            <span class="review-stars">
+              <% for(let i = 1; i <= 5; i++) { %>
+                <span class="<%= i <= review.rating ? 'star filled' : 'star' %>">★</span>
+              <% } %>
+            </span>
+          </div>
+          <p class="review-text">"<%= review.review_text %>"</p>
+          <small class="review-date">
+            Posted on <%= new Date(review.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+          </small>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <p class="no-reviews">No reviews yet. Be the first to share your thoughts!</p>
+  <% } %>
+
+  <hr>
+
+  <!-- Add Review Form -->
+  <% if (typeof loggedin !== 'undefined' && loggedin) { %>
+    <h3>Write a Review</h3>
+    <form action="/inv/review" method="POST" class="review-form">
+      <input type="hidden" name="inv_id" value="<%= item.inv_id %>">
+
+      <div class="form-group">
+        <label for="rating">Your Rating:</label>
+        <select name="rating" id="rating" required>
+          <option value="">Select Rating</option>
+          <option value="5">5 ★★★★★ - Excellent</option>
+          <option value="4">4 ★★★★☆ - Good</option>
+          <option value="3">3 ★★★☆☆ - Average</option>
+          <option value="2">2 ★★☆☆☆ - Fair</option>
+          <option value="1">1 ★☆☆☆☆ - Poor</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="review_text">Your Review:</label>
+        <textarea name="review_text" id="review_text" rows="6" 
+                  placeholder="What did you think about this vehicle?" required></textarea>
+      </div>
+
+      <button type="submit" class="btn-primary">Submit Review</button>
+    </form>
+  <% } else { %>
+    <p class="login-prompt">
+      <a href="/account/login">Login</a> to leave a review.
+    </p>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>
